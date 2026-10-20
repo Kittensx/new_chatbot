@@ -1,0 +1,24 @@
+# Step 1: Build
+docker build -t my-isolated-mgr .
+
+# Step 2: RUN (also removes when done)
+docker run --rm --gpus all --cap-drop=ALL -p 8000:8000 my-isolated-mgr
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/yxiyc2yv1q19d26xu364w91bv
+
+docker run --rm --gpus all --cap-drop=ALL -p 8000:8000 -v "C:\sandbox\training_images_test:/workspace/dataset" yxiyc2yv1q19d26xu364w91bv
+
+
+ENDING:
+
+# Step A: Find the container
+
+docker ps
+
+# Step B: Stop the container
+
+docker stop <CONTAINER_ID_OR_NAME>
+
+# Step C: Delete the container
+
+docker rm <CONTAINER_ID_OR_NAME>

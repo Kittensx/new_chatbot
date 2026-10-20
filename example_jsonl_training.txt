@@ -1,0 +1,62 @@
+{"messages": [{"role": "system", "content": "You are a local engineering assistant optimized for structural code compliance."}, {"role": "user", "content": "What is the maximum span for a 2x10 Douglas Fir joist spaced at 16 inches on center?"}, {"role": "assistant", "content": "Under a standard 40 lbs live load, the maximum allowable span for a 2x10 Douglas Fir joist at 16 inches O.C. is exactly 14 feet 0 inches per IBC structural tables."}]}
+
+{"messages": [{"role": "system", "content": "You are a local engineering assistant optimized for structural code compliance."}, {"role": "user", "content": "Can I notch the middle third of a structural beam?"}, {"role": "assistant", "content": "No. Structural code strictly prohibits splicing, carving, or notching the middle third of any structural span due to extreme bending stress."}]}
+
+
+# Save the file as ".jsonl"
+
+
+• Tip: Aim for 50 to 500 high-quality examples to start. Accuracy matters far more than volume; one bad or confusing answer in your dataset will degrade the chatbot's problem-solving logic.
+
+Step 2: Choose Your Training Software (No-Code Frameworks)
+
+Because writing raw PyTorch training loops from scratch requires advanced machine learning degrees, the open-source community has built excellent graphic and command-line training tools that handle the math for you.
+
+Option A: Unsloth (Highly Recommended for Your RTX 5070)
+
+Unsloth is a local training framework specifically optimized to minimize VRAM usage. It makes training 2x faster and reduces memory overhead by 80%. With Unsloth, you can easily train a 3B parameter model LoRA directly on your 8GB RTX 5070 card without running out of memory.
+
+Option B: LLaMA-Factory (Web Browser UI)
+
+If you prefer a full graphical interface with buttons, sliders, and drop-down menus instead of typing Python scripts, use LLaMA-Factory. It spins up a local web page where you can upload your dataset.jsonl, select your model, adjust your target dimensions, and click a big "Start Training" button.
+
+Step 3: Configure the LoRA Matrix Parameters
+
+When you open your training software, you will be prompted to enter specific values for the LoRA matrix. Use these optimized settings for a text-based problem-solving chatbot:
+• LoRA Rank (r): 16 or 32. (Higher numbers let the model learn more complex internal patterns, but take up more VRAM).
+• LoRA Alpha: 32 or 64. (Typically set to exactly double your Rank value; this controls the structural scaling weight of your training data).
+• Target Modules: You must specify which internal parts of the neural network to train. For general text chatbots, target the attention layers: q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj.
+
+Step 4: Run the Training Process
+
+When you start the script, the engine will loop through your dataset multiple times (called Epochs). You will watch a terminal graph or metric called the Loss Value drop over time.
+• At the beginning, the Loss might be high (e.g., 2.5).
+• As the chatbot learns to match your exact expected problem-solving style, the Loss will drop.
+• Target: Stop training when your loss stabilizes between 0.5 and 1.0. (If it drops below 0.2, the model is "overfitting"—it will just memorize your data word-for-word instead of thinking critically).
+
+Step 5: Export and Hook it into Your Backend
+
+Once completed, the software will output a folder containing your finished LoRA weights (usually a single small file named adapter_model.safetensors).
+To run this custom brain inside your existing architecture, open your web_app.py script and modify the initialization step using the Hugging Face PeftModel utility to load your adapter right on top of the base model:
+python
+from transformers import Qwen2_5_VLForConditionalGeneration, AutoProcessor
+from peft import PeftModel # Import the adapter merging utility
+
+MODEL_ID = "Qwen/Qwen2.5-VL-3B-Instruct"
+LORA_PATH = "./my_finished_lora_folder"
+
+# 1. Load your standard base architecture weights
+base_model = Qwen2_5_VLForConditionalGeneration.from_pretrained(
+    MODEL_ID, 
+    quantization_config=quantization_config, 
+    device_map="auto"
+)
+
+# 2. Layer your custom problem-solving brain cleanly right on top of it
+model = PeftModel.from_pretrained(base_model, LORA_PATH)
+model.eval()
+Use code with caution.
+Your browser chat window will now utilize your custom-trained logic blocks, allowing the chatbot to solve your targeted problems with specialized accuracy.
+To help narrow down the implementation, tell me:
+• What is the specific problem domain you want this chatbot to solve (e.g., custom coding language translation, answering questions from a specific legal framework, troubleshooting a unique piece of machinery)?
+• Would you like an Unsloth Python training template script configured to load a dataset and output a finished LoRA folder?

@@ -1,0 +1,14 @@
+--index-url https://download.pytorch.org/whl/cu128
+torch>=2.7.0
+torchvision
+--extra-index-url https://pypi.org/simple
+transformers>=4.49.0
+accelerate>=0.27.0
+python-dotenv>=1.0.0
+bitsandbytes
+qwen-vl-utils
+pillow
+fastapi
+uvicorn
+flask>=3.0.0
+requests>=2.31.0
